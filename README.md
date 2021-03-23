@@ -12,14 +12,14 @@ Ah et bien sûr, il faut idéalement cloner ce repository.
 
 Même si nous allons l'aborder un peu plus loin, une petite présentation de ce que sont Docker et MiniKube peut être utile.
 
-**Docker**: Vous en avez forcément entendu parler, c'est le substitut aux VMs à la mode basé sur le principe de "conteneurisation". L'idée est très simple, prendre un OS vide, mettre uniquement ce dont on a besoin pour son projet dessus, et figer le tout sous forme "d'image" puis l'utiliser pour son projet en le faisant tourner dans un container. Les avantages: 
+**Docker**: Vous en avez forcément entendu parler, c'est le substitut aux VMs à la mode basé sur le principe de "conteneurisation". L'idée est très simple, prendre un OS vide, mettre uniquement ce dont on a besoin pour son projet dessus, et figer le tout sous forme "d'image" puis l'utiliser pour son projet en le faisant tourner dans un containeur. Les avantages : 
 - assez facile d'utilisation
 - on est sûr d'avoir un environnement stable et minimal
 - très facile à répliquer à l'identique si besoin
 
 **Kubernetes**: C'est ce qu'on appelle un orchestrateur, un moyen facile de gérer tous ses services, d'automatiser leur déploiements, de les rendre requêtables, de les mettre à l'échelle en fonction de la demande etc. Son lien avec Docker ? Tous les services que l'on déploiera sur Kubernetes (appelé aussi Kube ou K8s) seront des conteneurs. Docker avait à la base développé son propre orchestrateur: Docker Swarm, mais de plus en plus K8s domine le marché. 
 
-**Minikube**: C'est un outil de développement assez pratique qui permet de simuler localement un cluster Kubernetes. En environnement de travail réel, il faudra utiliser un vrai cluster K8S, c'est à dire une vraie plateforme hostée sur un ou plusieurs serveurs permettant d'accéder à un certain nombre de ressources, là où un cluster MiniKube sera limité par les performances de l'ordinateur où il est lancé.
+**Minikube**: C'est un outil de développement assez pratique qui permet de simuler localement un cluster Kubernetes. En environnement de travail réel, il faudra utiliser un vrai cluster K8S, c'est à dire une vraie plateforme hébergée sur un ou plusieurs serveurs permettant d'accéder à un certain nombre de ressources, là où un cluster MiniKube sera limité par les performances de l'ordinateur où il est lancé.
 
 Pas de panique si il y a encore des incompréhensions on va voir tout ça en détail. 
 
@@ -30,15 +30,15 @@ Pas de panique si il y a encore des incompréhensions on va voir tout ça en dé
 Une fois tout installé, la première étape à effectuer et de vérifier que tout **fonctionne** (ce qui n'est pas toujours gagné non plus). 
 Alors pour tester docker, on va télécharger notre première image. 
 
-> Télécharger vous dites ? Mais je croyais qu'on les créait les images ! Oui, mais Docker a aussi un autre énorme avantage: le [DockerHub](https://hub.docker.com), qui est un site permettant d'accéder à des dizaines (centaines?) de milliers d'images Docker déjà toutes faites, et pouvant nous servir de base pour construire les nôtres.
+> Télécharger vous dites ? Mais je croyais qu'on les créait les images ! Oui, mais Docker a aussi un autre énorme avantage: le [DockerHub](https://hub.docker.com), qui est un site permettant d'accéder à des dizaines (centaines ?) de milliers d'images Docker déjà toutes faites, et pouvant nous servir de base pour construire les nôtres.
 
-Sur le DockerHub, on va aller chercher "python", le premier lien nous emmène vers le repository docker de python. Un repository c'est un peu comme pour git, un endroit où l'on va stocker les images, et les identifier par des versions plus communément appelées *tags*, une image est donc identifiée par <nom_répertoire>**:**<nom_tag>. Il existe ainsi un certain nombres d'images comme python:3.10, python:3.9.1, python:windows-server etc...  
+Sur le DockerHub, on va aller chercher "python", le premier lien nous emmène vers le repository docker de python. Un repository c'est un peu comme pour git, un endroit où l'on va stocker les images, et les identifier par des versions plus communément appelées *tags*, une image est donc identifiée par <nom_répertoire>**:**<nom_tag>. Il existe ainsi un certain nombre d'images comme python:3.10, python:3.9.1, python:windows-server etc...  
 
 On pourrait ici prendre le tag par défaut en faisant simplement `docker pull python` mais idéalement je trouve préférable de préciser la version que l'on souhaite avoir de façon explicite: `docker pull python:3.9`.
 
 > Concrètement l'image docker contiendra un OS linux minimal avec la version spécifiée de python d'installée. Et c'est tout.
 
-On peut ensuite tester l'image en elle même en lançant `docker run -it python:3.9` (i pour interactif, t pour tty qui permet d'avoir un affichage décent). Et si tout se passe bien, vous devriez maintenant avoir sous les yeux un splendide interpreteur python n'attendant plus que vos commandes!  
+On peut ensuite tester l'image en elle même en lançant `docker run -it  ` (i pour interactif, t pour tty qui permet d'avoir un affichage décent). Et si tout se passe bien, vous devriez maintenant avoir sous les yeux un splendide interpreteur python n'attendant plus que vos commandes !  
 
 > Comme nous le verrons plus tard si c'est un interpreteur python qui s'ouvre lors du docker run, c'est que la commande qui a été définie dans le Dockerfile de l'image lance l'interpreteur python au démarrage du conteneur. Mais vous pourriez tout aussi bien executer `docker run -it python:3.9 bash` pour vous retrouver à l'intérieur de la machine avec un interpreteur bash et lancer toutes vos commandes linux. 
 
@@ -58,7 +58,7 @@ La première étape consiste à créer le [Dockerfile](https://docs.docker.com/e
 Un Dockerfile n'a pas d'extension, il s'appelle tout simplement Dockerfile, la plupart des éditeurs de texte modernes le reconnaitront et adapteront la syntaxe automatiquement. 
 On va donc se placer dans le répertoire /api et créer un fichier Dockerfile. 
 
-Toutes les images Docker commencent par la même commande: `FROM <nom_d'image>` elle permet d'utiliser une autre image comme base de l'image que l'on créé. 
+Toutes les images Docker commencent par la même commande: `FROM <nom_d'image>` elle permet d'utiliser une autre image comme base de l'image que l'on créée. 
 Si vous avez bien suivi, je vous laisse deviner comment écrire la commande dans notre cas. 
 > **Hint:** *si vous bloquez à un moment, tous les fichiers "corrigés" se trouvent sur le git.*
 
@@ -77,6 +77,10 @@ Au préalable il faut cependant se placer dans le répertoire `./api` que nous a
 > Il est à noter que dans un docker file, chaque instruction RUN va créer une image intermédiaire qui sera identifiée par un hash, et vous pourrez utiliser chacun de ces hash en tant qu'image indépendante pour tester votre build petit à petit. Mais attention, chaque nouvelle étape intermédiaire va allourdir le poids de votre image finale, il est donc conseillé de combiner les commandes RUN lorsque cela est possible! 
 
 Il ne reste plus qu'à préciser quelle commande lancer lorsque le conteneur sera démarré. En l'occurence, on va ici lancer l'api gunicorn à l'aide de `CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000"]`.
+
+
+------->manque d'explication sur cette commande
+
 
 > Si vous avez choisi la première option lors de l'étape précédente, il faudra préciser api.main:app au lieu de main:app comme vous vous trouverez dans le répertoire parent de ./api.
 
@@ -101,7 +105,7 @@ Mais un moyen encore plus pratique consiste à "tagger" votre image lors du buil
 
 `docker build -t <repository_name>:<tag>`
 
-Si le tag n'est pas précisé, l'image sera automatiquement taggée en latest. On peut ainsi lancer dans notre cas:
+On peut ainsi lancer dans notre cas:
 
 `docker build -t super_api`
 
@@ -109,6 +113,7 @@ Ce qui permettra ensuite de lancer le container avec:
 
 `docker run super_api`
 
+(Si le tag n'est pas précisé, l'image sera automatiquement taggée en latest.)
 > Attention, les images sont sauvegardées à chaque build, et des containers sont lancés à chaque docker run (on peut voir les containers lancés à l'aide de `docker ps`), pensez à libérer de l'espace disque en lançant `docker rmi image_hash` ou `docker rmi repository:tag`. Il faudra peut être supprimer les containers utilisant ces images avant avec la commande docker rm container_name. 
 
 ### Un dernier problème
@@ -116,7 +121,7 @@ Ce qui permettra ensuite de lancer le container avec:
 Notre application tourne, c'est super. Mais essayez donc de faire un appel get sur votre localhost http://localhost:5000 . SPOILER: ça ne va pas marcher. Et pour cause: il manque deux étapes cruciales à notre process. 
 Premièrement, les ports d'un container ne sont pas ouverts de base, il faut manuellement les ouvrir à l'aide de la commande `EXPOSE <port_number>`.
 
-Deuxièmement, docker fait tourner ses containers dans un réseau virtuel, qui n'est pas accessible depuis "l'extérieur", c'est à dire notre localhost. Ainsi le port 5000 du container (TODO: à reformuler). Il faut donc indiquer au docker daemon de mapper le port du container sur un "vrai" port de notre machine à nous. On utilise pour celà le flag `-p <port_reel>:<port_container>`. Ce qui donne chez nous: `docker run -p 8000:5000 super_api.
+Deuxièmement, docker fait tourner ses containers dans un réseau virtuel, qui n'est pas accessible depuis "l'extérieur", c'est à dire notre localhost. Ainsi le port 5000 du container (TODO: à reformuler: je confirme haha). Il faut donc indiquer au docker daemon de mapper le port du container sur un "vrai" port de notre machine à nous. On utilise pour celà le flag `-p <port_reel>:<port_container>`. Ce qui donne chez nous: `docker run -p 8000:5000 super_api.
 
 > Par préférence personnelle j'aime ne pas utiliser exactement le même port réel que le port de container pour distinguer lequel est lequel mais cela n'a aucune importance tant que le port réel n'est pas pris par une autre application. 
 
